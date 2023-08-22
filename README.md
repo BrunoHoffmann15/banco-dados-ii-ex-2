@@ -1,1 +1,7 @@
-# banco-dados-ii-ex-2
+# Atividade 2 - Banco de Dados 2
+
+## Integrantes:
+- Bel Cogo
+- Bruno Hoffmann
+- João Accorsi
+- Rafael Klauck
