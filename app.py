@@ -33,22 +33,8 @@ def get_cliente(cliente_id):
     else:
         return jsonify({'message': 'Cliente não encontrado'}), 404
 
-@app.route('/cartao', methods=['POST'])
-def create_card():
-    data = request.get_json()
-    novo_cartao = Cartao(
-        numero = data['numero'],
-        cvv = data['cvv'],
-        validade = data['validade'],
-        nome_no_cartao = data['nome_no_cartao'],
-        client_id = data['client_id'],
-    )
-    session.add(novo_cartao)
-    session.commit()
-    return jsonify({'message': 'Cartao criado com sucesso!'})
-
-@app.route('/cartao/<int:client_id>', methods=['GET'])
-def get_cartao(client_id):
+@app.route('/cliente/<int:client_id>/cartoes', methods=['GET'])
+def get_cartao_client(client_id):
     cartoes = session.query(Cartao).filter_by(client_id=client_id).all()
     if cartoes:
         card_list = []
@@ -64,6 +50,35 @@ def get_cartao(client_id):
         return jsonify(card_list)
     else:
         return jsonify({'message': 'Cartão não encontrado'}), 404
+
+@app.route('/cartao', methods=['POST'])
+def create_card():
+    data = request.get_json()
+    novo_cartao = Cartao(
+        numero = data['numero'],
+        cvv = data['cvv'],
+        validade = data['validade'],
+        nome_no_cartao = data['nome_no_cartao'],
+        client_id = data['client_id'],
+    )
+    session.add(novo_cartao)
+    session.commit()
+    return jsonify({'message': 'Cartao criado com sucesso!'})
+
+
+@app.route('/cartao/<int:cartao_id>', methods=['GET'])
+def get_cartao(cartao_id):
+    cartao = session.query(Cartao).filter_by(id=cartao_id).first()
+    if cartao:
+        return jsonify({
+            'id': cartao.id,
+            'cvv': cartao.cvv,
+            'validade': cartao.validade,
+            'nome_no_cartao': cartao.nome_no_cartao,
+            'client_id': cartao.client_id,
+        })
+    else:
+        return jsonify({'message': 'Cliente não encontrado'}), 404
 
 if __name__ == '__main__':
     app.run(debug=True)
